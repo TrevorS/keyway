@@ -13,7 +13,7 @@ A simple lock file library.
 
 ###### Features
 * Provides mutual exclusion for scripts that require the same resource.
-* Requires only two additional lines of code in addition to sourcing the library.
+* Requires only two additional lines of code in your script besides sourcing the library.
 * Scripts using Keyway will either terminate or busy-wait for a resource if blocked.
 * Keyway will clean up locks created by scripts that have been terminated by `SIGINT` or `SIGTERM`.
 
