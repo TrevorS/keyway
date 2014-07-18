@@ -35,7 +35,7 @@ A simple lock file library.
 source keyway_lib.sh
 
 # optionally override the lock file directory
-LOCK_DIR=alt-lock-dir
+LOCK_DIR="alt-lock-dir"
 
 # attempt to lock the shared resource
 acquire_lock_for "your_task_name"
