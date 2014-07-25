@@ -15,7 +15,7 @@ A simple lock file library.
 * Provides mutual exclusion for scripts that require the same resource.
 * Requires only two additional lines of code in your script besides sourcing the library.
 * Scripts using Keyway will either terminate or busy-wait for a resource if blocked.
-* Keyway will clean up locks created by scripts that have been terminated by `SIGINT` or `SIGTERM`.
+* Keyway will clean up locks created by scripts that have been early-terminated by `SIGINT` or `SIGTERM`.
 
 ###### Usage:
 * `acquire_lock_for "your_task_name"`
@@ -34,7 +34,15 @@ A simple lock file library.
 #!/bin/bash
 source keyway_lib.sh
 
+# optionally override the lock file directory
+LOCK_DIR="alt-lock-dir"
+
+# attempt to lock the shared resource
 acquire_lock_for "your_task_name"
+
+# if the lock was successful, execute the task
 echo "executing critical section"
+
+# release the lock when the task is done
 release_lock_for "your_task_name"
 ```
