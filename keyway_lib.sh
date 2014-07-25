@@ -43,16 +43,16 @@ not_locked() {
 }
 
 lock_exists() {
-  lock_exists=1
+  local exists=1
   for lock in "$LOCK_DIR"/*.lock
   do
     if [ -f $lock ]; then
       LOCK_FILE=$lock
-      lock_exists=0
+      exists=0
       break
     fi
   done
-  return $lock_exists
+  return $exists
 }
 
 check_lock_dir() {
@@ -72,7 +72,7 @@ check_execution() {
 
 lock_log() {
   if [ ! "$SILENT" == true ]; then
-    datetime=`date +"%Y-%m-%d %H:%M:%S"`
+    local datetime=`date +"%Y-%m-%d %H:%M:%S"`
     printf "$datetime - Keyway: $1\n"
   fi
 }
