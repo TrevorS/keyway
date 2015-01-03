@@ -1,6 +1,9 @@
 # Keyway - a simple lock file library.
 # https://github.com/ATNI/keyway
 
+# Practice safe bash scripting.
+set -o errexit ; set -o nounset
+
 # Customize the location of your lock files for this resource.
 LOCK_DIR="locks"
 # Set to true to supress log messages.
