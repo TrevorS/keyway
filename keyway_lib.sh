@@ -9,8 +9,10 @@ LOCK_DIR="locks"
 # Set to true to supress log messages.
 SILENT=false
 
+# Check for locks and provide a warning during an abnormal exit.
+trap "check_for_locks" SIGTERM SIGINT ERR
+
 acquire_lock_for() {
-  trap "release_lock_for $1; exit" SIGTERM SIGINT
   if not_locked $1; then
     lock_log "Creating $1 lock."
     touch "$LOCK_DIR/$1".lock
@@ -35,6 +37,15 @@ release_lock_for() {
   lock_log "Releasing $1 lock."
   rm "$LOCK_DIR/$1".lock
   check_execution "release lock"
+}
+
+check_for_locks() {
+  shopt -s nullglob
+  if [[ ($LOCK_DIR/*.lock) ]]; then
+    lock_log "Dirty exit -- lock files found in $LOCK_DIR."
+    shopt -u nullglob && exit 3
+  fi
+  shopt -u nullglob
 }
 
 not_locked() {
