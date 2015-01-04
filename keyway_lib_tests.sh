@@ -35,11 +35,11 @@ else
   echo "Acquire Lock: Failed"
 fi
 
-# test lock_exists
-if lock_exists; then
-  echo "Lock Exists: Passed"
+# test lock
+if ! create_lock; then
+  echo "Mutex: Passed"
 else
-  echo "Lock Exists: Failed"
+  echo "Mutex: Failed"
 fi
 
 # test removal of lock file
@@ -48,13 +48,6 @@ if [ ! -f "$LOCK_DIR"/test.lock ]; then
   echo "Release Lock: Passed"
 else
   echo "Release Lock: Failed"
-fi
-
-# test not_locked
-if [ not_locked ]; then
-  echo "Not Locked: Passed"
-else
-  echo "Not Locked: Failed"
 fi
 
 # clean up after the tests
