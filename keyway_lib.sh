@@ -13,10 +13,12 @@ SILENT=false
 trap "check_for_locks" SIGTERM SIGINT ERR
 
 acquire_lock_for() {
-  if not_locked $1; then
-    lock_log "Creating $1 lock."
-    touch "$LOCK_DIR/$1".lock
+  if create_lock $1; then
     check_execution "acquire lock"
+    lock_log "Created $1 lock."
+  else
+    lock_log "Cannot run $1 -- application locked by $lock_file."
+    exit 1
   fi
 }
 
@@ -24,13 +26,17 @@ acquire_spinlock_for() {
   lock_log "Waiting on lock for $1."
   while :
   do
-    if lock_exists; then
-      sleep 1
-    else
+    if create_lock $1; then
       break
+    else
+      sleep 1
     fi
   done
-  acquire_lock_for $1
+}
+
+create_lock() {
+  check_lock_dir
+  ( set -o noclobber; echo "locked" > "$LOCK_DIR/$1".lock ) 2> /dev/null
 }
 
 release_lock_for() {
@@ -46,27 +52,6 @@ check_for_locks() {
     shopt -u nullglob && exit 3
   fi
   shopt -u nullglob
-}
-
-not_locked() {
-  check_lock_dir
-  if lock_exists; then
-    lock_log "Cannot run $1 -- application locked by $LOCK_FILE."
-    exit 1
-  fi
-}
-
-lock_exists() {
-  local exists=1
-  for lock in "$LOCK_DIR"/*.lock
-  do
-    if [ -f $lock ]; then
-      LOCK_FILE=$lock
-      exists=0
-      break
-    fi
-  done
-  return $exists
 }
 
 check_lock_dir() {
