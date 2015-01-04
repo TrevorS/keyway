@@ -27,6 +27,7 @@ acquire_spinlock_for() {
   while :
   do
     if create_lock $1; then
+      lock_log "Created $1 lock."
       break
     else
       sleep 1
