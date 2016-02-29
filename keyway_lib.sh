@@ -17,7 +17,7 @@ acquire_lock_for() {
     check_execution "acquire lock"
     lock_log "Created $1 lock."
   else
-    lock_log "Cannot run $1 -- application locked by $lock_file."
+    lock_log "Cannot run $1 -- application locked."
     exit 1
   fi
 }
